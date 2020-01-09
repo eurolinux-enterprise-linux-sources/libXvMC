@@ -1,18 +1,14 @@
 Summary: X.Org X11 libXvMC runtime library
 Name: libXvMC
-Version: 1.0.4
-Release: 8.1%{?dist}
+Version: 1.0.7
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.x.org
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
 
-BuildRequires: pkgconfig
-BuildRequires: libX11-devel
-BuildRequires: libXext-devel
-BuildRequires: libXv-devel
+BuildRequires: pkgconfig(videoproto) pkgconfig(xv)
 
 %description
 X.Org X11 libXvMC runtime library
@@ -28,20 +24,15 @@ X.Org X11 libXvMC development package
 %prep
 %setup -q
 
-# Disable static library creation by default.
-%define with_static 0
-
 %build
-%configure \
-%if ! %{with_static}
-	--disable-static
-%endif
-make
+%configure --disable-static
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
-make install DESTDIR=$RPM_BUILD_ROOT
+# do this ourself in %%doc so we get %%version
+rm $RPM_BUILD_ROOT%{_docdir}/*/*.txt
 
 # Touch XvMCConfig for rpm to package the ghost file. (#192254)
 {
@@ -49,18 +40,14 @@ make install DESTDIR=$RPM_BUILD_ROOT
     touch $RPM_BUILD_ROOT%{_sysconfdir}/X11/XvMCConfig
 }
 
-# We intentionally don't ship *.la files
-rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING README ChangeLog
+%doc COPYING README ChangeLog
 %{_libdir}/libXvMC.so.1
 %{_libdir}/libXvMC.so.1.0.0
 %{_libdir}/libXvMCW.so.1
@@ -69,18 +56,34 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root,-)
+%doc XvMC_API.txt
 %{_includedir}/X11/extensions/XvMClib.h
-%if %{with_static}
-%{_libdir}/libXvMC.a
-%{_libdir}/libXvMCW.a
-%endif
 %{_libdir}/libXvMC.so
 %{_libdir}/libXvMCW.so
 %{_libdir}/pkgconfig/xvmc.pc
 
 %changelog
-* Mon Nov 30 2009 Dennis Gregorovic <dgregor@redhat.com> - 1.0.4-8.1
-- Rebuilt for RHEL 6
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Mar 08 2012 Adam Jackson <ajax@redhat.com> 1.0.7-1
+- libXvMC 1.0.7
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.6-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Mon Oct 18 2010 Parag Nemade <paragn AT fedoraproject.org> 1.0.6-2
+- Merge-review cleanup (#226092)
+
+* Mon Aug 16 2010 Peter Hutterer <peter.hutterer@redhat.com> 1.0.6-1
+- libXvMC 1.0.6
+- remove AUTHORS, not in tarball anymore
+
+* Wed Oct 07 2009 Adam Jackson <ajax@redhat.com> 1.0.5-1
+- libXvMC 1.0.5
 
 * Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.4-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
