@@ -10,6 +10,7 @@
   XextCheckExtension(dpy, i, xvmc_extension_name, val)
 
 
+#if !defined(UNIXCPP)
 #define XvMCGetReq(name, req) \
         WORD64ALIGN\
 	if ((dpy->bufptr + sizeof(xvmc##name##Req)) > dpy->bufmax)\
@@ -20,6 +21,18 @@
         req->length = sizeof(xvmc##name##Req)>>2;\
 	dpy->bufptr += sizeof(xvmc##name##Req);\
 	dpy->request++
+#else
+#define XvMCGetReq(name, req) \
+        WORD64ALIGN\
+	if ((dpy->bufptr + sizeof(xvmc/**/name/**/Req)) > dpy->bufmax)\
+		_XFlush(dpy);\
+	req = (xvmc/**/name/**/Req *)(dpy->last_req = dpy->bufptr);\
+	req->reqType = info->codes->major_opcode;\
+	req->xvmcReqType = xvmc_/**/name;\
+	req->length = sizeof(xvmc/**/name/**/Req)>>2;\
+	dpy->bufptr += sizeof(xvmc/**/name/**/Req);\
+	dpy->request++
+#endif
 
 _XFUNCPROTOBEGIN
 

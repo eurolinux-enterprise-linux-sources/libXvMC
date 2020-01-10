@@ -178,15 +178,15 @@ static void *handle2;
 
 #define XW_RSYM(base,handle,handle2,pointer, retval)			\
     do {								\
-	register char *symerr;						\
+	register char *err;						\
 	base.pointer = (pointer##P) dlsym((handle),#pointer);		\
-	if ((symerr = dlerror()) != NULL) {				\
+	if ((err = dlerror()) != NULL) {				\
 	    if (!handle2) {						\
-		fprintf(stderr,"%s\n",symerr); return retval;		\
+		fprintf(stderr,"%s\n",err); return retval;		\
 	    }								\
 	    base.pointer = (pointer##P) dlsym((handle2),#pointer);	\
-	    if ((symerr = dlerror()) != NULL) {				\
-		fprintf(stderr,"%s\n",symerr); return retval;		\
+	    if ((err = dlerror()) != NULL) {				\
+		fprintf(stderr,"%s\n",err); return retval;		\
 	    }								\
 	}								\
     } while (0);

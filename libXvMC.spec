@@ -4,7 +4,7 @@
 
 Summary: X.Org X11 libXvMC runtime library
 Name: libXvMC
-Version: 1.0.10
+Version: 1.0.8
 Release: 1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 License: MIT
 Group: System Environment/Libraries
@@ -79,28 +79,6 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/xvmc.pc
 
 %changelog
-* Wed Oct 05 2016 Benjamin Tissoires <benjamin.tissoires@redhat.com> 1.0.10-1
-- libXvMC 1.0.10
-- fixes CVE-2016-7953
-
-* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.0.9-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
-
-* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.9-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
-
-* Sat Mar 14 2015 Benjamin Tissoires <benjamin.tissoires@redhat.com> 1.0.9-1
-- libXvMC 1.0.9
-
-* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.8-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
-
-* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.8-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
-
-* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 1.0.8-2
-- Mass rebuild 2013-12-27
-
 * Mon Jul 08 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.0.8-1
 - libXvMC 1.0.8
 
